@@ -202,7 +202,4 @@ Potential future enhancements include:
 
 **Yang Li**
 
-Master of Information Technology  
-University of Auckland
-
 ---

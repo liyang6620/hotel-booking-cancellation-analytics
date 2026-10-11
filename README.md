@@ -1,5 +1,7 @@
 # Hotel Booking Cancellation Business Analytics
 
+[![CI](https://github.com/liyang6620/hotel-booking-cancellation-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/liyang6620/hotel-booking-cancellation-analytics/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A business analytics and predictive modelling project focused on understanding hotel booking cancellation behaviour and identifying operational strategies to reduce cancellation risk.
 
 ---

@@ -1,5 +1,5 @@
 -r requirements.txt
 jupyter==1.1.1
-nbconvert==7.16.6
+nbconvert==7.17.2
 pytest==9.1.1
 ruff==0.14.3

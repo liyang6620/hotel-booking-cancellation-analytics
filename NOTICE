@@ -2,4 +2,11 @@
 
 The MIT License in this repository applies to original code and documentation authored for this project. It does not grant rights to third-party datasets, trademarks, or source publications included for reproducibility or demonstration.
 
-Third-party data remains subject to the terms and attribution requirements of its original provider. Review the dataset source documented in the README before redistributing or using the data outside this project.
+This repository includes the Hotel Booking Demand dataset described in:
+
+Nuno Antonio, Ana de Almeida, and Luis Nunes. "Hotel booking demand datasets."
+Data in Brief 22 (2019), 41-49. https://doi.org/10.1016/j.dib.2018.11.126
+
+Third-party data remains subject to the terms and attribution requirements of its original
+provider. Review the original publication before redistributing or using the data outside
+this project.

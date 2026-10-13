@@ -1,207 +1,178 @@
-# Hotel Booking Cancellation Business Analytics
+# Hotel Cancellation Risk ML
 
-[![CI](https://github.com/liyang6620/hotel-booking-cancellation-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/liyang6620/hotel-booking-cancellation-analytics/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/liyang6620/hotel-booking-cancellation-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/liyang6620/hotel-booking-cancellation-analytics/actions/workflows/ci.yml)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A business analytics and predictive modelling project focused on understanding hotel booking cancellation behaviour and identifying operational strategies to reduce cancellation risk.
+An end-to-end machine learning system that estimates a hotel's cancellation risk at
+**booking creation time**. The project prioritises leakage control, temporal validation,
+calibrated probabilities, reproducible artifacts, and honest future-period evaluation.
 
----
+![Temporal model selection](reports/figures/model-comparison.png)
 
-## Project Overview
+## Results at a glance
 
-Hotel booking cancellations create significant operational and revenue uncertainty for hotels. This project analyses booking behaviour across City Hotel and Resort Hotel segments to identify key drivers of cancellation risk and develop predictive models for cancellation monitoring.
+| Evaluation | Result |
+|---|---:|
+| Untouched test window | 31,692 bookings, Jan-Aug 2017 |
+| ROC-AUC | **0.832** (95% bootstrap CI 0.828-0.836) |
+| PR-AUC | **0.672** (95% bootstrap CI 0.663-0.682) |
+| Calibrated Brier score | **0.159** (raw model: 0.164) |
+| Recall at the validation-selected threshold | **97.2%** |
+| Selected model | Shallow XGBoost |
 
-The analysis combines:
+The operating point deliberately favours recall: a missed cancellation is assigned four
+times the cost of an unnecessary intervention. At threshold `0.128`, the model catches
+97.2% of cancellations but precision is 45.5%. This is a documented business trade-off,
+not a claim that one threshold fits every hotel.
 
-- Exploratory Business Analysis
-- Customer and operational behaviour analysis
-- Predictive modelling
-- Business interpretation
-- Management recommendations
+## Why this evaluation is credible
 
-This project is structured as a practical business analytics report rather than a purely academic machine learning notebook.
+The original analysis reported about 0.95 AUC from a random split. That result was not a
+reliable estimate of future performance: the data contains 31,994 exact duplicate rows,
+and several fields are only known after booking creation. Version 2.0 rebuilds the
+experiment around the real prediction point.
 
----
-
-## Business Problem
-
-Hotel operators face several challenges caused by booking cancellations:
-
-- Revenue instability
-- Inefficient room allocation
-- Staffing uncertainty
-- Demand forecasting issues
-- Customer communication inefficiencies
-
-This project investigates questions such as:
-
-- Which hotel type experiences higher cancellation risk?
-- Which customer groups are more likely to cancel?
-- How do booking channels and deposit policies affect cancellations?
-- Can booking-level information predict cancellation likelihood before arrival?
-
----
-
-## Dataset
-
-Dataset: **Hotel Booking Demand Dataset**
-
-The dataset contains reservation-level records for both City Hotel and Resort Hotel bookings, including:
-
-- Lead time
-- Customer type
-- Booking channel
-- Deposit policy
-- Room type
-- Market segment
-- Country
-- ADR (Average Daily Rate)
-- Repeated guest behaviour
-- Booking changes
-- Cancellation outcome
-
-### Target Variable
-
-```python
-is_canceled
-```
-
-- `1` = cancelled booking
-- `0` = completed booking
-
----
-
-## Business Analytics Workflow
-
-The project follows a business analytics workflow:
-
-1. Data Understanding
-2. Exploratory Business Analysis
-3. Data Preparation
-4. Predictive Modelling
-5. Business Interpretation
-6. Management Recommendations
-
----
-
-## Key Business Insights
-
-### City Hotel shows higher cancellation risk
-
-City Hotel records substantially higher cancellation rates than Resort Hotel, indicating greater operational uncertainty.
-
-### Seasonal demand patterns are significant
-
-Booking demand peaks during July and August, suggesting opportunities for seasonal pricing and staffing optimisation.
-
-### New guests cancel more frequently
-
-Repeated guests show much lower cancellation rates, highlighting the value of customer retention strategies.
-
-### Deposit policy strongly affects cancellations
-
-Non-refundable bookings exhibit extremely high cancellation rates, suggesting possible behavioural or policy-related issues.
-
-### Room type differences matter
-
-Certain room categories experience higher cancellation rates and may require improved pricing and inventory management.
-
----
-
-## Predictive Modelling
-
-Three classification models were developed and compared:
-
-| Model | Accuracy | AUC Score |
-|---|---|---|
-| Random Forest | 88.9% | 0.95 |
-| XGBoost | 87.4% | 0.95 |
-| Logistic Regression | 79.6% | 0.87 |
-
-### Model Interpretation
-
-- Random Forest achieved the strongest overall predictive performance.
-- XGBoost produced similarly strong classification capability.
-- Logistic Regression provided a more interpretable but weaker baseline model.
-
-The results suggest that hotel cancellation behaviour contains complex non-linear relationships that are better captured by tree-based models.
-
----
-
-## Management Recommendations
-
-The analysis proposes several practical business actions:
-
-- Strengthen cancellation prevention strategies for City Hotel
-- Improve first-time guest communication
-- Optimise deposit and payment policy structures
-- Improve room information transparency
-- Apply seasonal pricing and staffing strategies
-- Develop predictive cancellation risk monitoring workflows
-
----
-
-## Technologies Used
-
-### Programming & Analytics
-
-- Python
-- Pandas
-- NumPy
-- Scikit-learn
-- XGBoost
-- Matplotlib
-
-### Methods
-
-- Exploratory Data Analysis (EDA)
-- Feature Engineering
-- Classification Modelling
-- ROC/AUC Evaluation
-- Cross Validation
-
----
-
-## Repository Structure
+- Exact duplicate rows are removed before splitting because the dataset has no booking ID.
+- Train, validation, and test data are separated chronologically.
+- Model selection uses four expanding-window folds and PR-AUC as the primary metric.
+- Imputation and one-hot encoding are fitted inside every fold through a scikit-learn pipeline.
+- Validation data is used only for Platt calibration and threshold selection.
+- The 2017 test period remains untouched until the final evaluation.
+- `reservation_status`, `reservation_status_date`, and three post-booking fields are excluded.
+- Confidence intervals quantify uncertainty instead of presenting a single score as exact.
 
 ```text
-hotel-booking-cancellation-analysis/
-│
-├── hotel_booking_business_analytics_report.ipynb
-├── hotel_booking_business_analytics_report.html
-├── README.md
-├── images/
-└── data/
+2015-07 to 2016-08       2016-09 to 2016-12       2017-01 to 2017-08
+train + temporal CV  -> validation: calibrate  -> untouched final test
+41,140 bookings         and choose threshold      31,692 bookings
+                        14,564 bookings
 ```
 
----
+## ML workflow
 
-## Project Outputs
+```text
+raw booking data
+  -> duplicate policy + prediction-time contract
+  -> fold-local imputation and one-hot encoding
+  -> temporal comparison: logistic regression / RF / XGBoost
+  -> Platt probability calibration
+  -> cost-aware threshold selection
+  -> frozen model, preprocessor, calibrator, metadata, and regression fixture
+```
 
-This repository includes:
+The shallow XGBoost model achieved the best mean expanding-window PR-AUC:
 
-- Business analytics report notebook
-- Visual business analysis
-- Predictive modelling results
-- ROC curve evaluation
-- Management recommendations
-- Operational business interpretation
+| Candidate | Temporal PR-AUC | Temporal ROC-AUC | Brier score |
+|---|---:|---:|---:|
+| **XGBoost (shallow)** | **0.692 +/- 0.041** | **0.864 +/- 0.018** | **0.120** |
+| Random forest | 0.658 +/- 0.060 | 0.839 +/- 0.030 | 0.130 |
+| XGBoost (regularised) | 0.656 +/- 0.070 | 0.857 +/- 0.013 | 0.123 |
+| Logistic regression | 0.567 +/- 0.067 | 0.820 +/- 0.032 | 0.161 |
 
----
+![Out-of-time ROC and precision-recall curves](reports/figures/test-curves.png)
 
-## Future Improvements
+## Explainability and drift
 
-Potential future enhancements include:
+Native XGBoost SHAP contributions are computed on a fixed 5,000-row test sample. Country,
+special requests, agent, lead time, parking requests, and market segment have the greatest
+global influence. These are associations learned from historical data, not causal effects.
 
-- Real-time cancellation risk scoring
-- Dashboard integration
-- Explainable AI techniques (SHAP / feature importance)
-- Hyperparameter optimisation
-- Deployment as a hotel decision-support application
+| Feature influence | Temporal stability |
+|---|---|
+| ![SHAP feature influence](reports/figures/feature-importance.png) | ![Monthly model stability](reports/figures/temporal-stability.png) |
 
----
+Monthly ROC-AUC falls from 0.854 in January to about 0.800-0.812 in July and August, while
+the Brier score rises. This is actionable drift evidence: a deployed version would require
+monthly monitoring and a retraining trigger rather than silent long-term use.
+
+## Probability quality and operating point
+
+| Calibration | Validation-selected decision point |
+|---|---|
+| ![Calibration curve](reports/figures/calibration.png) | ![Confusion matrix](reports/figures/confusion-matrix.png) |
+
+Platt scaling reduces the untouched-test Brier score from 0.164 to 0.159. The threshold is
+selected only on the validation period using `4 * false negatives + false positives`; it is
+never tuned on the test set.
+
+## Reproduce the project
+
+Python 3.12 is the supported runtime.
+
+```bash
+python -m venv .venv
+source .venv/bin/activate       # Windows: .venv\Scripts\activate
+python -m pip install -r requirements-dev.txt
+python scripts/train_model.py
+python -m pytest
+ruff check .
+```
+
+Training rebuilds the model bundle, evaluation tables, plots, split manifest, and score
+regression fixture from `data/2022_hotel_bookings.csv`. On a typical laptop it takes a few
+minutes because every candidate is refitted across four temporal folds.
+
+The compact evidence notebook can also be executed independently:
+
+```bash
+python -m nbconvert --execute --to notebook --inplace hotel_booking_ml_evidence.ipynb
+```
+
+## Score bookings
+
+The persisted preprocessor, model, and portable JSON calibrator are loaded separately so
+training and inference share the same feature engineering contract.
+
+```python
+import pandas as pd
+
+from hotel_cancellation.scoring import load_artifacts, score_bookings
+
+bookings = pd.read_csv("data/2022_hotel_bookings.csv").head(5)
+probabilities = score_bookings(bookings, load_artifacts())
+print(probabilities)
+```
+
+Set `PYTHONPATH=src` when running the snippet without installing the package. The required
+raw fields and excluded future fields are recorded in `artifacts/feature_contract.json`.
+
+## Repository map
+
+```text
+artifacts/                     frozen model bundle, metadata, split and score fixtures
+data/                          source hotel booking dataset
+docs/MODEL_CARD.md             intended use, evaluation, risks, and monitoring plan
+reports/figures/               generated ML evidence
+reports/tables/                machine-readable experiment results
+scripts/train_model.py         one-command reproducible training entry point
+src/hotel_cancellation/        features, training, calibration, and scoring code
+tests/                         contracts, leakage, split, artifact, and inference tests
+hotel_booking_ml_evidence.ipynb compact executable evidence notebook
+```
+
+## Scope and limitations
+
+- The public dataset covers two Portuguese hotels from 2015-2017; it is not representative
+  of every property, market, or current customer population.
+- Temporal evaluation uses planned arrival date, the reliable event timestamp in the source.
+  It measures generalisation to future stay cohorts rather than a delayed-label online replay.
+- Country and agent identifiers can encode location or commercial relationships and require
+  governance review before operational use.
+- SHAP values explain model behaviour, not why a guest cancels.
+- The model is a portfolio-quality ML reference implementation, not a production reservation
+  service. Live use would still need consent, access control, observability, rollback,
+  service-level objectives, and continuous drift/fairness review.
+
+See the [model card](docs/MODEL_CARD.md) for the full evaluation and responsible-use notes.
+
+## Data and licence
+
+The project uses the Hotel Booking Demand dataset described by Antonio, Almeida, and Nunes
+in [Data in Brief (2019)](https://doi.org/10.1016/j.dib.2018.11.126). Code is released under
+the [MIT License](LICENSE); dataset attribution and third-party terms are documented in
+[NOTICE](NOTICE).
 
 ## Author
 
 **Yang Li**
-
----

@@ -1,0 +1,204 @@
+{
+  "model_version": "2.0.0",
+  "prediction_time": "booking creation",
+  "data_sha256": "c26b50fa0c020ca6782bf3634a975e2daf1cb13108290820e34963105ad96961",
+  "source_rows": 119390,
+  "exact_duplicate_rows_removed": 31994,
+  "model_rows": 87396,
+  "split": {
+    "train_rows": 41140,
+    "validation_rows": 14564,
+    "test_rows": 31692,
+    "train_period": [
+      "2015-07-01",
+      "2016-08-31"
+    ],
+    "validation_period": [
+      "2016-09-01",
+      "2016-12-31"
+    ],
+    "test_period": [
+      "2017-01-01",
+      "2017-08-31"
+    ]
+  },
+  "selection": {
+    "method": "four expanding-window temporal folds on training data",
+    "primary_metric": "PR-AUC",
+    "selected_model": "XGBoost (shallow)",
+    "candidates": [
+      {
+        "model": "XGBoost (shallow)",
+        "temporal_roc_auc_mean": 0.8638242957156927,
+        "temporal_roc_auc_std": 0.017832038427455444,
+        "temporal_pr_auc_mean": 0.6916174700866796,
+        "temporal_pr_auc_std": 0.041180929115030344,
+        "temporal_brier_mean": 0.11988823353223718,
+        "temporal_brier_std": 0.03359612740220871
+      },
+      {
+        "model": "Random forest",
+        "temporal_roc_auc_mean": 0.8393014239898164,
+        "temporal_roc_auc_std": 0.029634633040868524,
+        "temporal_pr_auc_mean": 0.6576507608994429,
+        "temporal_pr_auc_std": 0.06043017074482168,
+        "temporal_brier_mean": 0.1301547166961353,
+        "temporal_brier_std": 0.02599070884900318
+      },
+      {
+        "model": "XGBoost (regularised)",
+        "temporal_roc_auc_mean": 0.8567725444362148,
+        "temporal_roc_auc_std": 0.013467689589377517,
+        "temporal_pr_auc_mean": 0.6558832612896965,
+        "temporal_pr_auc_std": 0.06952772634307942,
+        "temporal_brier_mean": 0.12265791427098757,
+        "temporal_brier_std": 0.02703468747331079
+      },
+      {
+        "model": "Logistic regression",
+        "temporal_roc_auc_mean": 0.819923423682926,
+        "temporal_roc_auc_std": 0.032307039529133684,
+        "temporal_pr_auc_mean": 0.5673662784104454,
+        "temporal_pr_auc_std": 0.06701727186667035,
+        "temporal_brier_mean": 0.16127123957308415,
+        "temporal_brier_std": 0.03401852809682784
+      }
+    ]
+  },
+  "calibration": "Platt scaling fitted on the future validation period",
+  "threshold_policy": "Validation cost: false negative = 4, false positive = 1",
+  "test_metrics": {
+    "roc_auc": 0.8319265596869283,
+    "roc_auc_95_ci": [
+      0.8277858163266693,
+      0.8363177044942582
+    ],
+    "pr_auc": 0.6724846198733702,
+    "pr_auc_95_ci": [
+      0.6627869906618866,
+      0.682306086656762
+    ],
+    "brier_raw": 0.16393345319536798,
+    "brier_calibrated": 0.1590678782009915,
+    "log_loss": 0.47691633775505965,
+    "threshold": 0.12785953177257525,
+    "precision": 0.4553199370312066,
+    "recall": 0.9724117472560071,
+    "f2": 0.7924254633360194,
+    "balanced_accuracy": 0.713626050651962,
+    "specificity": 0.45484035404791695,
+    "false_positives": 11764,
+    "false_negatives": 279
+  },
+  "top_features": [
+    {
+      "feature": "categorical__country_PRT",
+      "mean_abs_shap": 0.6947916150093079,
+      "mean_shap": -0.3178069293498993
+    },
+    {
+      "feature": "numeric__total_of_special_requests",
+      "mean_abs_shap": 0.6275599598884583,
+      "mean_shap": -0.1434931457042694
+    },
+    {
+      "feature": "categorical__agent_code_9.0",
+      "mean_abs_shap": 0.4645911753177643,
+      "mean_shap": -0.030894553288817406
+    },
+    {
+      "feature": "numeric__lead_time",
+      "mean_abs_shap": 0.4098246097564697,
+      "mean_shap": 0.04293975234031677
+    },
+    {
+      "feature": "numeric__required_car_parking_spaces",
+      "mean_abs_shap": 0.36661598086357117,
+      "mean_shap": -0.13452239334583282
+    },
+    {
+      "feature": "categorical__market_segment_Online TA",
+      "mean_abs_shap": 0.2829076051712036,
+      "mean_shap": 0.03307877853512764
+    },
+    {
+      "feature": "categorical__customer_type_Transient",
+      "mean_abs_shap": 0.16087119281291962,
+      "mean_shap": 0.03229980543255806
+    },
+    {
+      "feature": "categorical__agent_code_240.0",
+      "mean_abs_shap": 0.13472142815589905,
+      "mean_shap": -0.014559026807546616
+    },
+    {
+      "feature": "numeric__previous_cancellations",
+      "mean_abs_shap": 0.11651075631380081,
+      "mean_shap": -0.08405789732933044
+    },
+    {
+      "feature": "numeric__adr",
+      "mean_abs_shap": 0.11294473707675934,
+      "mean_shap": 0.03367087244987488
+    },
+    {
+      "feature": "numeric__previous_bookings_not_canceled",
+      "mean_abs_shap": 0.06272945553064346,
+      "mean_shap": -0.02779286727309227
+    },
+    {
+      "feature": "numeric__arrival_month_cos",
+      "mean_abs_shap": 0.06255199760198593,
+      "mean_shap": 0.012111350893974304
+    },
+    {
+      "feature": "categorical__deposit_type_Non Refund",
+      "mean_abs_shap": 0.052115216851234436,
+      "mean_shap": -0.007265938445925713
+    },
+    {
+      "feature": "categorical__market_segment_Offline TA/TO",
+      "mean_abs_shap": 0.05015327408909798,
+      "mean_shap": 0.002041285391896963
+    },
+    {
+      "feature": "categorical__customer_type_Transient-Party",
+      "mean_abs_shap": 0.03520577773451805,
+      "mean_shap": 0.009959510527551174
+    },
+    {
+      "feature": "numeric__total_nights",
+      "mean_abs_shap": 0.03242912143468857,
+      "mean_shap": 0.004956879653036594
+    },
+    {
+      "feature": "numeric__arrival_week_sin",
+      "mean_abs_shap": 0.027775146067142487,
+      "mean_shap": 0.01760837808251381
+    },
+    {
+      "feature": "categorical__country_ESP",
+      "mean_abs_shap": 0.023850450292229652,
+      "mean_shap": 0.0010857543675228953
+    },
+    {
+      "feature": "categorical__country_DEU",
+      "mean_abs_shap": 0.02287405915558338,
+      "mean_shap": -0.0065988944843411446
+    },
+    {
+      "feature": "numeric__stays_in_week_nights",
+      "mean_abs_shap": 0.022119058296084404,
+      "mean_shap": 5.0474471208872274e-05
+    }
+  ],
+  "direct_leakage_columns": [
+    "reservation_status",
+    "reservation_status_date"
+  ],
+  "post_booking_columns": [
+    "assigned_room_type",
+    "booking_changes",
+    "days_in_waiting_list"
+  ]
+}

@@ -1,0 +1,21 @@
+feature,mean_abs_shap,mean_shap
+categorical__country_PRT,0.6947916,-0.31780693
+numeric__total_of_special_requests,0.62755996,-0.14349315
+categorical__agent_code_9.0,0.46459118,-0.030894553
+numeric__lead_time,0.4098246,0.042939752
+numeric__required_car_parking_spaces,0.36661598,-0.1345224
+categorical__market_segment_Online TA,0.2829076,0.03307878
+categorical__customer_type_Transient,0.1608712,0.032299805
+categorical__agent_code_240.0,0.13472143,-0.014559027
+numeric__previous_cancellations,0.11651076,-0.0840579
+numeric__adr,0.11294474,0.033670872
+numeric__previous_bookings_not_canceled,0.062729456,-0.027792867
+numeric__arrival_month_cos,0.062552,0.012111351
+categorical__deposit_type_Non Refund,0.052115217,-0.0072659384
+categorical__market_segment_Offline TA/TO,0.050153274,0.0020412854
+categorical__customer_type_Transient-Party,0.035205778,0.0099595105
+numeric__total_nights,0.03242912,0.0049568797
+numeric__arrival_week_sin,0.027775146,0.017608378
+categorical__country_ESP,0.02385045,0.0010857544
+categorical__country_DEU,0.02287406,-0.0065988945
+numeric__stays_in_week_nights,0.022119058,5.047447e-05

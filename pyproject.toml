@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hotel-cancellation-ml"
+version = "2.0.0"
+description = "Leakage-safe temporal ML for hotel cancellation risk"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Yang Li" }]
+dependencies = [
+  "joblib==1.5.2",
+  "matplotlib==3.10.7",
+  "numpy==2.3.4",
+  "pandas==2.3.3",
+  "scikit-learn==1.7.2",
+  "xgboost==3.1.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
